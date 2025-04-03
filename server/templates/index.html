@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block content %}
-<div className="container">
+<div class="container">
   <form id="auth-form" action="{{url_for('login')}}" method="POST">
+    <h1 class="login">Login</h2>
     <input
       type="text"
       name="username"
