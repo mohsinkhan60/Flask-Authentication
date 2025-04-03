@@ -45,15 +45,35 @@ def login():
         return redirect(url_for('dashboard'))
     else:
         return render_template('index.html')
+    
+# Register route
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    password = request.form['password']
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return render_template('index.html', error="User already exists")
+    else:
+        new_user = User(username=username)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        session['username'] = username
+        return redirect(url_for('dashboard'))
 
+# dashbard
+@app.route('/dashboard')
+def dashboard():
+    if "username" in session:
+        return render_template('dashboard.html', username=session['username'])
+    return redirect(url_for('home'))
 
-
-
-
-
-
-
-
+# Logout
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
